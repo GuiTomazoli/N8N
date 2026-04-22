@@ -1,0 +1,91 @@
+{
+  "name": "AlertasFaltas",
+  "nodes": [
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {}
+          ]
+        },
+        "documentId": {
+          "__rl": true,
+          "value": "1E4hp1IPou3P__A9riFS7aGD-lGhoycmoZ0h-4HZo6QM",
+          "mode": "list",
+          "cachedResultName": "DadosN8N",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1E4hp1IPou3P__A9riFS7aGD-lGhoycmoZ0h-4HZo6QM/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1767914198,
+          "mode": "list",
+          "cachedResultName": "Faltas Funcionarios",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1E4hp1IPou3P__A9riFS7aGD-lGhoycmoZ0h-4HZo6QM/edit#gid=1767914198"
+        },
+        "event": "rowAdded",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "fda2f88a-85c5-42a5-89a6-1ef72b3331fe",
+      "name": "Google Sheets Trigger",
+      "credentials": {
+        "googleSheetsTriggerOAuth2Api": {
+          "id": "vgkqyuq5VmoGhHtc",
+          "name": "Google Sheets Trigger OAuth2 API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "guitomazoli@gmail.com",
+        "subject": "Alerta de Falta",
+        "emailType": "text",
+        "message": "=O funcionária  {{ $json.Nome }} faltou em {{ $json.Data }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        208,
+        0
+      ],
+      "id": "9b5992b6-241f-4b3f-9751-7bd3c7900d3a",
+      "name": "Send a message",
+      "webhookId": "c578e472-4230-406a-a7ce-9758287cb05b",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "8KSbH2wdbYjVXJy3",
+          "name": "Gmail OAuth2 API"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Google Sheets Trigger": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "staticData": null,
+  "pinData": {},
+  "triggerCount": 0,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  }
+}

@@ -1,0 +1,139 @@
+{
+  "name": "My workflow 2",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "weeks"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        0,
+        0
+      ],
+      "id": "4628a783-2f72-4d76-b16c-cc39bb55d1be",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1E4hp1IPou3P__A9riFS7aGD-lGhoycmoZ0h-4HZo6QM",
+          "mode": "list",
+          "cachedResultName": "DadosN8N",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1E4hp1IPou3P__A9riFS7aGD-lGhoycmoZ0h-4HZo6QM/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1769495500,
+          "mode": "list",
+          "cachedResultName": "DadosLimpos",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1E4hp1IPou3P__A9riFS7aGD-lGhoycmoZ0h-4HZo6QM/edit#gid=1769495500"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        208,
+        0
+      ],
+      "id": "a9c256f8-8759-4023-a1cd-0809a67c0175",
+      "name": "Get row(s) in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "LQGb6q9c69iruKR6",
+          "name": "Google Sheets OAuth2 API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const total = items.length;\nconst agora = new Date().toLocaleString(\"pt-BR\");\nreturn [{\n  json: {\n    mensagem: `💾 Base atualizada com ${total} registros em ${agora}`,\n    link: \"https://docs.google.com/spreadsheets/d/1E4hp1IPou3P__A9riFS7aGD-lGhoycmoZ0h-4HZo6QM/edit\"\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        416,
+        0
+      ],
+      "id": "0feaa540-9b43-43ce-8fe7-161306c2da4a",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "sendTo": "guitomazoli@gmail.com",
+        "subject": "Atualizacao dos Dados",
+        "emailType": "text",
+        "message": "={{ $json.mensagem }}\n\nAcesse aqui: {{ $json.link }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        624,
+        0
+      ],
+      "id": "a89f9391-a5cb-49b8-8c9e-c9f806d33304",
+      "name": "Send a message",
+      "webhookId": "dc5078ad-2fc3-4e27-b3ff-50f157919ad5",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "8KSbH2wdbYjVXJy3",
+          "name": "Gmail OAuth2 API"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "staticData": null,
+  "pinData": {},
+  "triggerCount": 0,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  }
+}

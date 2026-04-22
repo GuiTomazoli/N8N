@@ -1,0 +1,119 @@
+{
+  "name": "DetectorFalhas",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "triggerAtHour": 8
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        0,
+        0
+      ],
+      "id": "07a785b2-c28b-4d1b-898c-9dad306a009c",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "url": "https://guilhermetomazoli.app.n8n.cloud//rest/executions?status=error&limit=10",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        208,
+        0
+      ],
+      "id": "bbe24eda-87da-41bf-b7cf-1dfec0fa3fb9",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Loop over input items and add a new field 'myNewField' to the JSON of each one\nfor (const item of $input.all()) {\n  item.json.myNewField = 1;\n}\n\nreturn $input.all();\nconst list = $input.all();\nconst lines = list.map((e, idx) => {\n  const wfName = e.json.workflowName ?? e.json.workflowId ?? idx + 1;\n  const error = e.json.error;\n  const started = e.json.startedAt ? new Date(e.json.startedAt) : null;\n\n  const msg =\n    error?.message ??\n    error?.msg ??\n    error ??\n    \"Sem mensagem de erro\";\n\n  const startedAt = e.startTime ?? e.started ?? e.startedAtUtc ?? \"\";\n  const id = e.id ?? e.executionId ?? e.json.id ?? (idx + 1);\n  return `▶️ ${wfName} (#${id})\nInicio: ${started}`;\n});\n\nreturn [{\n  json: {\n    msg: `Falhas detectadas (${list.length}):\\n\\n${lines.join(\"\\n\\n\")}`\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        416,
+        0
+      ],
+      "id": "55218a15-d9c0-46b1-a7ea-65f0c4aabd4f",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "sendTo": "guitomazoli@gmail.com",
+        "subject": "Relatório de Falhas",
+        "message": "={{ $json.data }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        624,
+        0
+      ],
+      "id": "d24f96c0-13e6-478a-8b0e-96c4c43d1c80",
+      "name": "Send a message",
+      "webhookId": "8af87d20-541d-432d-9fde-b2ea4fa177b5",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "8KSbH2wdbYjVXJy3",
+          "name": "Gmail OAuth2 API"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "staticData": null,
+  "pinData": {},
+  "triggerCount": 0,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  }
+}

@@ -1,0 +1,271 @@
+{
+  "name": "FluxoCondicional",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "0e19598e-e2dd-48c4-b9d6-a7ebe525d457",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "url": "https://dummyjson.com/products?limit=10",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        208,
+        0
+      ],
+      "id": "533bec83-8710-4715-ae0a-8fb22c3ec506",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "products",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        416,
+        0
+      ],
+      "id": "c3be3807-6c48-4fd7-bf94-80b928e18dc7",
+      "name": "Split Out"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "2aef241e-10d3-4ede-90f0-80f6de9cafbf",
+              "name": "Nome",
+              "value": "={{ $json.title }}",
+              "type": "string"
+            },
+            {
+              "id": "1aca88f5-f554-424e-8124-5cff32860e25",
+              "name": "Categoria",
+              "value": "={{ $json.category }}",
+              "type": "string"
+            },
+            {
+              "id": "eec27542-b328-41b5-92b1-8728caa3bae2",
+              "name": "Preco",
+              "value": "={{ $json.price }}",
+              "type": "number"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        624,
+        0
+      ],
+      "id": "e6351d5d-6e9e-47d4-8f84-314f57215b02",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "c184b82b-3323-409b-8789-3b5a17742c67",
+              "leftValue": "={{ $json.Preco }}",
+              "rightValue": 50,
+              "operator": {
+                "type": "number",
+                "operation": "gt"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        832,
+        0
+      ],
+      "id": "8e47a564-88b5-41f8-8336-6ea52d92f6b2",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1E4hp1IPou3P__A9riFS7aGD-lGhoycmoZ0h-4HZo6QM",
+          "mode": "list",
+          "cachedResultName": "DadosN8N",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1E4hp1IPou3P__A9riFS7aGD-lGhoycmoZ0h-4HZo6QM/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 491978107,
+          "mode": "list",
+          "cachedResultName": "ProdutosVIP",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1E4hp1IPou3P__A9riFS7aGD-lGhoycmoZ0h-4HZo6QM/edit#gid=491978107"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1040,
+        -96
+      ],
+      "id": "938b7120-0a76-4142-ab57-3c4abc427bf6",
+      "name": "Append row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "LQGb6q9c69iruKR6",
+          "name": "Google Sheets OAuth2 API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1E4hp1IPou3P__A9riFS7aGD-lGhoycmoZ0h-4HZo6QM",
+          "mode": "list",
+          "cachedResultName": "DadosN8N",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1E4hp1IPou3P__A9riFS7aGD-lGhoycmoZ0h-4HZo6QM/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 657570181,
+          "mode": "list",
+          "cachedResultName": "ProdutosBaratos",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1E4hp1IPou3P__A9riFS7aGD-lGhoycmoZ0h-4HZo6QM/edit#gid=657570181"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1040,
+        96
+      ],
+      "id": "c997f7f0-6789-4acf-a0ae-af5f6b0b2a73",
+      "name": "Append row in sheet1",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "LQGb6q9c69iruKR6",
+          "name": "Google Sheets OAuth2 API"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Split Out",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Out": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Append row in sheet1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "staticData": null,
+  "pinData": {},
+  "triggerCount": 0,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  }
+}

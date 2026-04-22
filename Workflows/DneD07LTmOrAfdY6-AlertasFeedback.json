@@ -1,0 +1,227 @@
+{
+  "name": "AlertasFeedback",
+  "nodes": [
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {}
+          ]
+        },
+        "documentId": {
+          "__rl": true,
+          "value": "1E4hp1IPou3P__A9riFS7aGD-lGhoycmoZ0h-4HZo6QM",
+          "mode": "list",
+          "cachedResultName": "DadosN8N",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1E4hp1IPou3P__A9riFS7aGD-lGhoycmoZ0h-4HZo6QM/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1439222194,
+          "mode": "list",
+          "cachedResultName": "AvaliacoesClientes",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1E4hp1IPou3P__A9riFS7aGD-lGhoycmoZ0h-4HZo6QM/edit#gid=1439222194"
+        },
+        "event": "rowAdded",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "2063698d-c7e7-4a0d-abdc-d53dfd042cc3",
+      "name": "Google Sheets Trigger",
+      "credentials": {
+        "googleSheetsTriggerOAuth2Api": {
+          "id": "vgkqyuq5VmoGhHtc",
+          "name": "Google Sheets Trigger OAuth2 API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "084eb41b-42fc-4674-b3cc-0a8b81717499",
+              "leftValue": "={{ $json.Nota }}",
+              "rightValue": 3,
+              "operator": {
+                "type": "number",
+                "operation": "lt"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        208,
+        0
+      ],
+      "id": "c093fda5-e79a-4d2c-a59e-f58ac4248f29",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "sendTo": "guitomazoli@gmail.com",
+        "subject": "Alerta de Avaliação Baixa",
+        "emailType": "text",
+        "message": "=O cliente  {{ $('Google Sheets Trigger').item.json.Cliente }} fez uma avaliação de {{ $('Google Sheets Trigger').item.json.Nota }} para o produto {{ $('Google Sheets Trigger').item.json.Produto }} Segue os comentários:\n\n{{ $('Google Sheets Trigger').item.json.Comentario }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        416,
+        -96
+      ],
+      "id": "4128200c-ccb4-427b-9555-9f919851ee0e",
+      "name": "Send a message",
+      "webhookId": "b9ffcce9-16c9-437c-bf60-f06f9e93a9d0",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "8KSbH2wdbYjVXJy3",
+          "name": "Gmail OAuth2 API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1E4hp1IPou3P__A9riFS7aGD-lGhoycmoZ0h-4HZo6QM",
+          "mode": "list",
+          "cachedResultName": "DadosN8N",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1E4hp1IPou3P__A9riFS7aGD-lGhoycmoZ0h-4HZo6QM/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1639817667,
+          "mode": "list",
+          "cachedResultName": "FeedbacksPositivos",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1E4hp1IPou3P__A9riFS7aGD-lGhoycmoZ0h-4HZo6QM/edit#gid=1639817667"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Cliente": "={{ $json.Cliente }}",
+            "Produto": "={{ $json.Produto }}",
+            "Nota": "={{ $json.Nota }}",
+            "Comentario": "={{ $json.Comentario }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Cliente",
+              "displayName": "Cliente",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Produto",
+              "displayName": "Produto",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Nota",
+              "displayName": "Nota",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Comentario",
+              "displayName": "Comentario",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        416,
+        96
+      ],
+      "id": "612b7e66-a2ab-46a4-b9fe-ff6b4717fef5",
+      "name": "Append row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "LQGb6q9c69iruKR6",
+          "name": "Google Sheets OAuth2 API"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Google Sheets Trigger": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "staticData": null,
+  "pinData": {},
+  "triggerCount": 0,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  }
+}

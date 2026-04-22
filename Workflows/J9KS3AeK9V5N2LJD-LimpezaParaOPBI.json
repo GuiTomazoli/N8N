@@ -1,0 +1,226 @@
+{
+  "name": "LimpezaParaOPBI",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "89ef2232-2127-423b-bf25-3af95439d6f0",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1E4hp1IPou3P__A9riFS7aGD-lGhoycmoZ0h-4HZo6QM",
+          "mode": "list",
+          "cachedResultName": "DadosN8N",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1E4hp1IPou3P__A9riFS7aGD-lGhoycmoZ0h-4HZo6QM/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1670857721,
+          "mode": "list",
+          "cachedResultName": "DadosBrutos",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1E4hp1IPou3P__A9riFS7aGD-lGhoycmoZ0h-4HZo6QM/edit#gid=1670857721"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        208,
+        0
+      ],
+      "id": "7613f066-3285-4ad7-80e3-734be3ac6001",
+      "name": "Get row(s) in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "LQGb6q9c69iruKR6",
+          "name": "Google Sheets OAuth2 API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "return items.map(item => {\n    let notaTxt = (item.json.Nota || \"\").toString().toLowerCase().trim();\n    let notaNum = null;\n\n    // Mapeia palavras para números\n    switch (notaTxt) {\n        case \"um\": notaNum = 1; break;\n        case \"dois\": notaNum = 2; break;\n        case \"três\":\n        case \"tres\": notaNum = 3; break;\n        case \"quatro\": notaNum = 4; break;\n        case \"cinco\": notaNum = 5; break;\n        default:\n            // Se já veio número, converte\n            notaNum = Number(notaTxt) || 0;\n    }\n\n    // Retorna os dados tratados\n    return {\n        cliente: item.json.cliente,\n        produto: item.json.produto,\n        nota: notaNum,\n        comentario: item.json.comentario || \"Sem comentário\"\n    };\n});"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        416,
+        0
+      ],
+      "id": "a3f8350f-f31a-4d6d-aa23-fe444111f38b",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "6b32f136-b254-4529-beac-dd6be9a4361d",
+              "leftValue": "={{ $('Get row(s) in sheet').item.json.NomeCliente }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2.3,
+      "position": [
+        624,
+        0
+      ],
+      "id": "b0261356-5c31-4c86-bcc8-0ab1f11eafd8",
+      "name": "Filter"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1E4hp1IPou3P__A9riFS7aGD-lGhoycmoZ0h-4HZo6QM",
+          "mode": "list",
+          "cachedResultName": "DadosN8N",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1E4hp1IPou3P__A9riFS7aGD-lGhoycmoZ0h-4HZo6QM/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1769495500,
+          "mode": "list",
+          "cachedResultName": "DadosLimpos",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1E4hp1IPou3P__A9riFS7aGD-lGhoycmoZ0h-4HZo6QM/edit#gid=1769495500"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "NomeCliente": "={{ $('Get row(s) in sheet').item.json.NomeCliente }}",
+            "Avaliacao": "={{ $('Get row(s) in sheet').item.json.Avaliacao }}",
+            "Nota": "={{ $('Code in JavaScript').item.json.nota }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "NomeCliente",
+              "displayName": "NomeCliente",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Avaliacao",
+              "displayName": "Avaliacao",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Nota",
+              "displayName": "Nota",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        832,
+        0
+      ],
+      "id": "67ba99c7-b8a0-4165-84ce-a3a8beb9ea3e",
+      "name": "Append row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "LQGb6q9c69iruKR6",
+          "name": "Google Sheets OAuth2 API"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "Filter",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "staticData": null,
+  "pinData": {},
+  "triggerCount": 0,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  }
+}
